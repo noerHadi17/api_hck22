@@ -6,7 +6,7 @@ from flask_cors import CORS
 from flask import send_from_directory
 
 # Load model
-with open("../model/best_model_ever.pkl", "rb") as f:
+with open("best_model_ever.pkl", "rb") as f:
     model = pickle.load(f)
 
 app = Flask(__name__)
