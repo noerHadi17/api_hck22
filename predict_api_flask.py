@@ -18,7 +18,7 @@ def serve_home():
 
 @app.route('/predictor')
 def serve_predictor():
-    return send_from_directory('.', 'price_predictor_final_linked.html')
+    return send_from_directory('.', 'price_predictor.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -31,4 +31,4 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=3000)
