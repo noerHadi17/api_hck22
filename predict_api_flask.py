@@ -1,17 +1,21 @@
-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import pickle
 import pandas as pd
 from flask_cors import CORS
-from flask import send_from_directory
+import os
 
 # Load model
-with open("best_model_ever.pkl", "rb") as f:
+MODEL_PATH = "best_model_ever.pkl"
+if not os.path.exists(MODEL_PATH):
+    raise FileNotFoundError("❌ Model file 'best_model_ever.pkl' not found.")
+
+with open(MODEL_PATH, "rb") as f:
     model = pickle.load(f)
 
 app = Flask(__name__)
-CORS(app)  # Allow all origins
+CORS(app)
 
+# Optional: Serve HTML (index and predictor form)
 @app.route('/')
 def serve_home():
     return send_from_directory('.', 'index.html')
@@ -20,6 +24,7 @@ def serve_home():
 def serve_predictor():
     return send_from_directory('.', 'price_predictor.html')
 
+# API route
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
@@ -30,5 +35,7 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Run app for platform compatibility (Render)
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000)
+    port = int(os.environ.get("PORT", 3000))
+    app.run(host='0.0.0.0', port=port)
